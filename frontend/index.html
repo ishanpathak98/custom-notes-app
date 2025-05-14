@@ -1,40 +1,20 @@
 <!DOCTYPE html>
-<html>
-<head><title>Note App</title></head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Note App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
 <body>
-  <h2>Notes</h2>
-  <form id="noteForm">
-    <input type="text" id="noteInput" required />
-    <button type="submit">Add</button>
-  </form>
-  <ul id="notesList"></ul>
+    <h1>My Notes</h1>
 
-  <script>
-    async function fetchNotes() {
-      const res = await fetch('http://127.0.0.1:5000/notes');
-      const notes = await res.json();
-      const list = document.getElementById('notesList');
-      list.innerHTML = '';
-      notes.forEach(note => {
-        const li = document.createElement('li');
-        li.textContent = note;
-        list.appendChild(li);
-      });
-    }
+    <form id="noteForm">
+        <textarea id="noteInput" placeholder="Write your note here..."></textarea>
+        <button type="submit">Add Note</button>
+    </form>
 
-    document.getElementById('noteForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const note = document.getElementById('noteInput').value;
-      await fetch('http://127.0.0.1:5000/notes', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ note })
-      });
-      document.getElementById('noteInput').value = '';
-      fetchNotes();
-    });
+    <ul id="notesList"></ul>
 
-    fetchNotes();
-  </script>
+    <script src="script.js"></script>
 </body>
 </html>
