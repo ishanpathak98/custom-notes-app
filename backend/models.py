@@ -1,31 +1,34 @@
 import sqlite3
 import os
 
-DB_PATH = os.path.join(os.path.dirname(__file__), '../database/notes.db')
+# Ensure a database directory exists
+if not os.path.exists('database'):
+    os.makedirs('database')
 
+DB_PATH = 'database/notes.db'
+
+# Create notes table if not exists
 def init_db():
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS notes (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            content TEXT NOT NULL
-        )
-    ''')
-    conn.commit()
-    conn.close()
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS notes (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                content TEXT NOT NULL
+            )
+        ''')
+        conn.commit()
 
-def add_note(note):
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute('INSERT INTO notes (content) VALUES (?)', (note,))
-    conn.commit()
-    conn.close()
+# Add a new note
+def add_note(content):
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        cursor.execute('INSERT INTO notes (content) VALUES (?)', (content,))
+        conn.commit()
 
+# Get all notes
 def get_all_notes():
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-    cursor.execute('SELECT content FROM notes')
-    rows = cursor.fetchall()
-    conn.close()
-    return [row[0] for row in rows]
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        cursor.execute('SELECT id, content FROM notes')
+        return cursor.fetchall()
