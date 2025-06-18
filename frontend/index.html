@@ -1,40 +1,28 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Netflix Notes</title>
+  <title>Netflix Notes App</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header>
     <h1>Netflix Notes</h1>
+    <button onclick="logout()">Logout</button>
   </header>
 
   <main>
-    <section class="note-section">
-      <textarea id="noteInput" placeholder="Write your note..."></textarea>
-      <button id="saveNote">Save Note</button>
-    </section>
+    <textarea id="noteInput" placeholder="Write your note..."></textarea>
+    <button id="saveNote">Save Note</button>
 
-    <section class="tabs">
-      <button class="tab-button" onclick="showTab('allNotes')">All Notes</button>
-      <button class="tab-button" onclick="showTab('calendarView')">Calendar</button>
-    </section>
-
-    <section id="allNotes" class="tab-content">
+    <div class="search-calendar">
       <input type="text" id="searchInput" placeholder="Search notes...">
-      <div id="notesList"></div>
-    </section>
+      <input type="date" id="calendarDate">
+    </div>
 
-    <section id="calendarView" class="tab-content" style="display:none;">
-      <input type="date" id="calendarDate" />
-      <div id="calendarNotes"></div>
-    </section>
+    <ul id="notesList"></ul>
   </main>
 
   <script src="script.js"></script>
 </body>
 </html>
-```
