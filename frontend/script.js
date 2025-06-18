@@ -1,83 +1,77 @@
 const API_URL = 'http://localhost:5000/notes';
 
-document.addEventListener('DOMContentLoaded', () => {
+// Event listeners
+window.onload = () => {
   fetchNotes();
 
-  document.getElementById('noteForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const noteInput = document.getElementById('noteInput');
-    const content = noteInput.value.trim();
+  document.getElementById('saveNote').addEventListener('click', async () => {
+    const content = document.getElementById('noteInput').value.trim();
     if (!content) return;
-
     await saveNote(content);
-    noteInput.value = '';
+    document.getElementById('noteInput').value = '';
     fetchNotes();
   });
 
   document.getElementById('searchInput').addEventListener('input', (e) => {
-    const query = e.target.value.trim();
-    if (query === '') {
-      fetchNotes();
-    } else {
-      searchNotes(query);
-    }
+    const q = e.target.value.trim();
+    q ? searchNotes(q) : fetchNotes();
   });
-});
+
+  document.getElementById('calendarDate').addEventListener('change', fetchCalendarNotes);
+};
 
 async function fetchNotes() {
-  try {
-    const res = await fetch(API_URL);
-    const notes = await res.json();
-    renderNotes(notes);
-  } catch (err) {
-    console.error('❌ Error fetching notes:', err);
-  }
+  const res = await fetch(API_URL);
+  const notes = await res.json();
+  renderNotes(notes);
 }
 
 async function saveNote(content) {
-  try {
-    const res = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ content })
-    });
-    if (!res.ok) throw new Error('Failed to save note');
-  } catch (err) {
-    console.error('❌ Error saving note:', err);
-  }
+  await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ content })
+  });
 }
 
-async function searchNotes(query) {
-  try {
-    const res = await fetch(`${API_URL}/search?q=${encodeURIComponent(query)}`);
-    const notes = await res.json();
-    renderNotes(notes);
-  } catch (err) {
-    console.error('❌ Error searching notes:', err);
-  }
+async function searchNotes(q) {
+  const res = await fetch(`${API_URL}/search?q=${encodeURIComponent(q)}`);
+  const notes = await res.json();
+  renderNotes(notes);
+}
+
+async function fetchCalendarNotes() {
+  const date = document.getElementById('calendarDate').value;
+  const res = await fetch(`${API_URL}/by-date?date=${date}`);
+  const notes = await res.json();
+  renderCalendarNotes(notes);
 }
 
 function renderNotes(notes) {
-  const notesContainer = document.getElementById('notesList');
-  notesContainer.innerHTML = '';
-
-  if (!notes.length) {
-    notesContainer.innerHTML = '<p>No notes found.</p>';
-    return;
-  }
-
+  const list = document.getElementById('notesList');
+  list.innerHTML = notes.length ? '' : '<p>No notes found.</p>';
   notes.forEach(note => {
-    const noteEl = document.createElement('div');
-    noteEl.className = 'note';
-
-    const contentEl = document.createElement('p');
-    contentEl.textContent = note.content;
-
-    const dateEl = document.createElement('small');
-    dateEl.textContent = `🕒 ${new Date(note.createdAt).toLocaleString()}`;
-
-    noteEl.appendChild(contentEl);
-    noteEl.appendChild(dateEl);
-    notesContainer.appendChild(noteEl);
+    const el = document.createElement('div');
+    el.className = 'note';
+    el.innerHTML = `<p>${note.content}</p><small>${new Date(note.createdAt).toLocaleString()}</small>`;
+    list.appendChild(el);
   });
+}
+
+function renderCalendarNotes(notes) {
+  const list = document.getElementById('calendarNotes');
+  list.innerHTML = notes.length ? '' : '<p>No notes found on selected date.</p>';
+  notes.forEach(note => {
+    const el = document.createElement('div');
+    el.className = 'note';
+    el.innerHTML = `<p>${note.content}</p><small>${new Date(note.createdAt).toLocaleString()}</small>`;
+    list.appendChild(el);
+  });
+}
+
+function showTab(tabId) {
+  document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+  document.getElementById(tabId).style.display = 'block';
+  document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+  document.querySelector(`[onclick*="${tabId}"]`).classList.add('active');
 }
