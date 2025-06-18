@@ -4,11 +4,10 @@ const noteSchema = new mongoose.Schema({
   content: {
     type: String,
     required: true
-  },
-  date: {
-    type: Date,
-    default: Date.now
   }
+}, {
+  timestamps: true // Adds createdAt and updatedAt
 });
 
 module.exports = mongoose.model('Note', noteSchema);
+
