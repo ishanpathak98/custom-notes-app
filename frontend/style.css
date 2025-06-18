@@ -1,64 +1,41 @@
-/* Apply a clean, dark background with Netflix style */
 body {
-    font-family: Arial, sans-serif;
-    width: 600px;
-    margin: 50px auto;
-    text-align: center;
-    background-color: #141414; /* Dark Netflix-style background */
-    color: #ffffff;
+  font-family: sans-serif;
+  margin: 20px;
+  background-color: #f9f9f9;
 }
 
-/* Main heading with red Netflix accent */
 h1 {
-    margin-bottom: 20px;
-    color: #e50914; /* Netflix red */
+  text-align: center;
 }
 
-/* Text input for note-taking */
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 textarea {
-    width: 100%;
-    height: 100px;
-    padding: 10px;
-    font-size: 1em;
-    border-radius: 5px;
-    border: none;
-    resize: none;
-    background-color: #1f1f1f; /* Slightly lighter dark box */
-    color: white;
-    margin-bottom: 15px;
+  width: 80%;
+  height: 100px;
+  margin-bottom: 10px;
 }
 
-/* Submit button styling */
 button {
-    padding: 10px 20px;
-    font-size: 1em;
-    background-color: #e50914; /* Netflix red */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  padding: 10px 20px;
 }
 
-/* Hover effect for the button */
-button:hover {
-    background-color: #b20710; /* Darker red on hover */
+#searchInput {
+  width: 80%;
+  padding: 10px;
+  margin: 20px auto;
+  display: block;
 }
 
-/* Remove bullets and spacing from note list */
-ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-/* Individual note style */
-li {
-    background-color: #1f1f1f;
-    margin: 10px 0;
-    padding: 10px;
-    text-align: left;
-    border-radius: 5px;
-    color: #fff;
-    box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
-    word-wrap: break-word;
+.note {
+  background: #fff;
+  margin: 10px auto;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  width: 80%;
 }
