@@ -1,20 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Note App</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Custom Notes App</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>My Notes</h1>
+  <h1>📝 My Notes</h1>
 
-    <form id="noteForm">
-        <textarea id="noteInput" placeholder="Write your note here..."></textarea>
-        <button type="submit">Add Note</button>
-    </form>
+  <form id="noteForm">
+    <textarea id="noteInput" placeholder="Write your note..." required></textarea>
+    <button type="submit">Save Note</button>
+  </form>
 
-    <ul id="notesList"></ul>
+  <input type="text" id="searchInput" placeholder="Search notes..." />
 
-    <script src="script.js"></script>
+  <div id="notesList"></div>
+
+  <script src="script.js"></script>
 </body>
 </html>
