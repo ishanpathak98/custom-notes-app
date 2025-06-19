@@ -4,22 +4,34 @@ const cors = require('cors');
 const Note = require('./models/Note');
 
 const app = express();
-const PORT = 5001;
 
-// ✅ Replace this with your real MongoDB URI (already updated)
+// ✅ Use PORT from environment or default to 5001
+const PORT = process.env.PORT || 5001;
+
+// ✅ MongoDB URI - hosted Atlas connection string
 const MONGO_URI = 'mongodb+srv://notesuser:Test%40123@notesappcluster.9jrk69z.mongodb.net/?retryWrites=true&w=majority&appName=NotesAppCluster';
 
-mongoose.connect(MONGO_URI)
-  .then(() => {
-    console.log("✅ Connected to MongoDB");
-    app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
-  })
-  .catch((err) => console.error("❌ MongoDB connection error:", err));
-
+// ✅ Middleware setup
 app.use(cors());
 app.use(express.json());
 
-// ✅ Create Note
+// ✅ Connect to MongoDB and start the server
+mongoose.connect(MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => {
+  console.log("✅ Connected to MongoDB");
+  app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+})
+.catch((err) => {
+  console.error("❌ MongoDB connection error:", err);
+  process.exit(1); // Exit if DB fails
+});
+
+// ✅ Routes
+
+// ➕ Create a note
 app.post('/notes', async (req, res) => {
   try {
     const { content } = req.body;
@@ -31,7 +43,7 @@ app.post('/notes', async (req, res) => {
   }
 });
 
-// ✅ Get All Notes
+// 📄 Get all notes
 app.get('/notes', async (req, res) => {
   try {
     const notes = await Note.find().sort({ createdAt: -1 });
@@ -41,7 +53,7 @@ app.get('/notes', async (req, res) => {
   }
 });
 
-// ✅ Search Notes (by keyword)
+// 🔍 Search notes by keyword
 app.get('/notes/search', async (req, res) => {
   try {
     const { q } = req.query;
@@ -51,4 +63,3 @@ app.get('/notes/search', async (req, res) => {
     res.status(500).json({ error: 'Search failed' });
   }
 });
-
