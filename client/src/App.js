@@ -1,7 +1,13 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-import './App.css';
+import NoteApp from './components/NoteApp';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);
+function App() {
+  return (
+    <div className="App">
+      <h1>📝 Custom Notes App</h1>
+      <NoteApp />
+    </div>
+  );
+}
+
+export default App; // ✅ This is the required fix
