@@ -1,38 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-
-const BASE_URL = 'http://localhost:5001';
 
 function NoteApp() {
   const [notes, setNotes] = useState([]);
   const [content, setContent] = useState('');
-  const [search, setSearch] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const fetchNotes = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/notes`);
+      const res = await axios.get('http://localhost:5001/notes');
       setNotes(res.data);
     } catch (err) {
-      console.error('Failed to fetch notes:', err);
+      console.error('Error fetching notes:', err);
     }
   };
 
-  const handleAddNote = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!content.trim()) return;
     try {
-      await axios.post(`${BASE_URL}/notes`, { content });
+      await axios.post('http://localhost:5001/notes', { content });
       setContent('');
       fetchNotes();
     } catch (err) {
-      console.error('Failed to add note:', err);
+      console.error('Error creating note:', err);
     }
   };
 
-  const handleSearch = async () => {
+  const handleSearch = async (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
     try {
-      const res = await axios.get(`${BASE_URL}/notes/search?q=${search}`);
+      const res = await axios.get(`http://localhost:5001/notes/search?q=${query}`);
       setNotes(res.data);
     } catch (err) {
-      console.error('Search failed:', err);
+      console.error('Error searching notes:', err);
     }
   };
 
@@ -42,28 +44,28 @@ function NoteApp() {
 
   return (
     <div>
-      <textarea
-        placeholder="Write your note here..."
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-      />
-      <br />
-      <button onClick={handleAddNote}>Add Note</button>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          placeholder="Enter note"
+        />
+        <button type="submit">Add Note</button>
+      </form>
+
       <input
         type="text"
-        placeholder="Search notes..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        value={searchQuery}
+        onChange={handleSearch}
+        placeholder="Search notes"
       />
-      <button onClick={handleSearch}>Search</button>
 
-      <div>
+      <ul>
         {notes.map((note) => (
-          <div key={note._id} className="note">
-            {note.content}
-          </div>
+          <li key={note._id}>{note.content}</li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 }
