@@ -4,7 +4,7 @@ const cors = require('cors');
 const Note = require('./models/Note');
 
 const app = express();
-const PORT = 5000;
+const PORT = 5001;
 
 // ✅ Replace this with your real MongoDB URI (already updated)
 const MONGO_URI = 'mongodb+srv://notesuser:Test%40123@notesappcluster.9jrk69z.mongodb.net/?retryWrites=true&w=majority&appName=NotesAppCluster';
