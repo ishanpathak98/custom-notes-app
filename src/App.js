@@ -1,14 +1,9 @@
 import React from 'react';
-import NoteApp from './components/NoteApp';
 import './App.css';
+import NoteApp from './components/NoteApp';
 
 function App() {
-  return (
-    <div className="App">
-      <h1 className="app-title">Ishan's Customized Notes App</h1>
-      <NoteApp />
-    </div>
-  );
+  return <NoteApp />;
 }
 
 export default App;
