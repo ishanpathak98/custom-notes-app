@@ -1,71 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './NoteApp.css';
+import './NoteApp.css'; // optional if using separate CSS
 
 const NoteApp = () => {
-  const [note, setNote] = useState('');
-  const [notesList, setNotesList] = useState([]);
-  const [search, setSearch] = useState('');
+  const [notes, setNotes] = useState([]);
+  const [content, setContent] = useState('');
+
+  const fetchNotes = async () => {
+    const res = await axios.get('http://localhost:5001/notes');
+    setNotes(res.data);
+  };
+
+  const addNote = async () => {
+    if (!content.trim()) return;
+    await axios.post('http://localhost:5001/notes', { content });
+    setContent('');
+    fetchNotes();
+  };
 
   useEffect(() => {
     fetchNotes();
   }, []);
 
-  const fetchNotes = async () => {
-    try {
-      const res = await axios.get('http://localhost:5000/notes');
-      setNotesList(res.data);
-    } catch (error) {
-      console.error('Error fetching notes:', error);
-    }
-  };
-
-  const saveNote = async () => {
-    if (!note.trim()) return;
-    try {
-      await axios.post('http://localhost:5000/notes', { content: note });
-      setNote('');
-      fetchNotes();
-    } catch (error) {
-      console.error('Error saving note:', error);
-    }
-  };
-
-  const searchNotes = async () => {
-    try {
-      const res = await axios.get(`http://localhost:5000/notes/search?q=${search}`);
-      setNotesList(res.data);
-    } catch (error) {
-      console.error('Error searching notes:', error);
-    }
-  };
-
   return (
-    <div>
-      <textarea
-        placeholder="Write your note here..."
-        value={note}
-        onChange={(e) => setNote(e.target.value)}
-      />
-      <br />
-      <button onClick={saveNote}>Save Note</button>
-      <br /><br />
-      <input
-        type="text"
-        placeholder="Search notes..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
-      <button onClick={searchNotes}>Search</button>
-
+    <div className="container">
+      <h1>My Notes</h1>
       <div>
-        {notesList.map((n) => (
-          <div key={n._id} className="note-item">
-            <p>{n.content}</p>
-            <small>{new Date(n.date).toLocaleString()}</small>
-          </div>
-        ))}
+        <input
+          type="text"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          placeholder="Type your note here..."
+        />
+        <button onClick={addNote}>Add</button>
       </div>
+      {notes.map((note) => (
+        <div key={note._id} className="note">
+          {note.content}
+        </div>
+      ))}
     </div>
   );
 };
